@@ -1,90 +1,89 @@
+//call(),apply(),bind()
+let studentOne  = {
+    firstname : "Madhavan",
+    lastname : "S.V"
+}
+let studentTwo  = {
+    firstname : "Aravinth",
+    lastname : "N"
+}
+function printFullName(age,rollNo){
+    console.log(`Fullname : ${this.firstname} ${this.lastname}\nAge : ${age}\nRoll No : ${rollNo}`);
+}
+//Call and apply are function borrow methods . The diffrence between then is apply takes an array as an arguments
+printFullName.call(studentOne , 20 , 23)
+printFullName.apply(studentTwo,[ 20 , 1])
 
-const promise = new Promise((resolve,reject)=>{
-    setTimeout(()=> {
-        resolve("Promise is resolved after 5 sec")
-    },5000)
-})
+//bind - it binds the data of the objects and takes the copy . returns a method when we calls them
+let studentFullName = printFullName.bind(studentOne,20,23)
+studentFullName() 
 
-//USE OF ASYN & AWAIT
-async function getData(){
-    const awaitPromise = await promise
-    console.log(awaitPromise);
-    console.log("After waiting 5 sec this statement is printed")
+// class = (ES6 feature) provides a more structured and cleaner way to 
+//               work with objects compared to traditional constructor functions
+//               ex. static keyword, encapsulation, inheritance
+
+class Product{
+    constructor(name, price){
+        this.name = name;
+        this.price = price;
+    }
+
+    displayProduct(){
+        console.log(`Product: ${this.name}`);
+        console.log(`Price: $${this.price.toFixed(2)}`);
+    }
+
+    calculateTotal(salesTax = 0.05){
+        return this.price + (this.price * salesTax);
+    }
 }
 
-getData()
 
-//BEFORE ASYNC & AWAIT METHOD TO HANDLE PROMISES
-function normalPromiseHandle(){
-    promise.then((res)=> console.log(res))
-    console.log("In normal way 1st i will be Printed ,after only")
-}
-normalPromiseHandle()
+const product1 = new Product("Shirt", 19.99);
+const product2 = new Product("Pants", 22.50);
+const product3 = new Product("Coat", 100.00);
 
+product2.displayProduct();
 
+const total = product2.calculateTotal();
+console.log(`Total price (with tax): $${total.toFixed(2)}`);
 
-//Work Out Problems with Time interal behaiviour of Async / Await  
+//Setters: 
+class Employee{
+    set name(name){
+      this.empName = name
+    }
+     specialPrint(){
+       console.log(this.empName)
+     }
+   }
+   
+let employee = new Employee
+employee.name = 'Madhavan'
+employee.specialPrint()
 
-let p1 = new Promise((resolve,reject)=>{
-    setTimeout(()=>{
-      resolve("Promise1 is Resolved in Async")
-    },10000)
-  })
-  
-  let p2 = new Promise((resolve,reject)=>{
-    setTimeout(()=>{
-      resolve("Promise2 is Resolved in Async")
-    },5000)
-  })
-  
-  async function getData(){
-    console.log("Hello This Async/Await")
-    const promise1 = await p1
-    console.log(promise1)
-    
-    const promise2 = await p2
-    console.log(promise2)
+//getters
+class Employee{
+    name = 'madhavan'
+    get getName(){
+       return this.name
+    }
+     specialPrint(){
+       console.log(this.name)
+     }
+   }
+   
+let employee = new Employee
+console.log(employee.getName); 
+
+/*Static : If we use static keyword , we dont neeed to create instance for the class . 
+         static variable can accesed inside normal decalration but normal variable cannot access inside static.*/
+class Student{
+    static name = 'Madhavan'
+    static age = 20
+    static get details(){
+      return(Student.name) 
+    }
   }
   
-  getData()
-
-
-//Fetch the real-world API . GITHUB user details of Mine as Example and  Show it on Console with Async , Await , Fetch
-
-// const api = "https://api.github.com/users/MADHAVAN-2003";
-// const api2 = "https://api.github.com/users/MADHAVAN-KIOT";
-
-// async function getGitHubData() {
-//   const fetchApi = await fetch(api);
-//   const fetchApi2 = await fetch(api2);
-
-//   const jsonValue = await fetchApi.json();
-//   const jsonValue2 = await fetchApi2.json();
-//   console.log(jsonValue);
-//   console.log(jsonValue2);
-// }
-
-getGitHubData();
-
-
-//ERROR- HANDLING FETCHING API
-
-const api = "https://api.github.com/users/MADHAVAN-2003";
-const api2 = "https://api.github.com/users/MADHAVAN-piot";
-
-async function getGitHubData() {
-  try {
-    const fetchApi = await fetch(api);
-    const fetchApi2 = await fetch(api2);
-
-    const jsonValue = await fetchApi.json();
-    const jsonValue2 = await fetchApi2.json();
-    console.log(jsonValue);
-    console.log(jsonValue2);
-    
-  } catch(err) {
-    console.log(err);
-  }
-}
-
-getGitHubData();
+  console.log(Student.details)
