@@ -84,6 +84,6 @@ class Student{
     static get details(){
       return(Student.name) 
     }
-  }
+}
   
-  console.log(Student.details)
+console.log(Student.details)
