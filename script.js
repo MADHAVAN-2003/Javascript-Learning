@@ -1,89 +1,55 @@
-//call(),apply(),bind()
-let studentOne  = {
-    firstname : "Madhavan",
-    lastname : "S.V"
+const containerId = document.getElementById("container");
+
+//function to fetch data from LocalHost
+async function localhostData() {
+  try {
+    const api = "http://192.168.29.179:4000/mcq";
+    const fetchApi = await fetch(api);
+    const data = await fetchApi.json();
+    console.log(data);
+    
+    //looping the elements and appending to out html to display the mcq
+    data.forEach((element, index) => {
+      const mcqDiv = document.createElement('div');
+      mcqDiv.classList.add('mcq');
+
+      const questionSpan = document.createElement('span');
+      questionSpan.innerHTML = `Question ${index + 1}: ${element.question}<br/>`;
+
+      const optionsSpan = document.createElement('span');
+      optionsSpan.innerHTML = `Options : ${element.options.map(opt => opt.text).join(", ")}<br/>`;
+
+      const button = document.createElement('button');
+      button.textContent = 'Show Answer';
+      button.addEventListener('click', () => {
+        showAnswer(index);
+      });
+
+      const answerDiv = document.createElement('div');
+      answerDiv.id = `answer${index}`;
+      answerDiv.style.display = 'none';
+      answerDiv.innerHTML = `Correct Answer : ${element.options.find(opt => opt.isCorrect).text}`;
+
+      mcqDiv.appendChild(questionSpan);
+      mcqDiv.appendChild(optionsSpan);
+      mcqDiv.appendChild(button);
+      mcqDiv.appendChild(answerDiv);
+
+      containerId.appendChild(mcqDiv);
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
-let studentTwo  = {
-    firstname : "Aravinth",
-    lastname : "N"
-}
-function printFullName(age,rollNo){
-    console.log(`Fullname : ${this.firstname} ${this.lastname}\nAge : ${age}\nRoll No : ${rollNo}`);
-}
-//Call and apply are function borrow methods . The diffrence between then is apply takes an array as an arguments
-printFullName.call(studentOne , 20 , 23)
-printFullName.apply(studentTwo,[ 20 , 1])
 
-//bind - it binds the data of the objects and takes the copy . returns a method when we calls them
-let studentFullName = printFullName.bind(studentOne,20,23)
-studentFullName() 
-
-// class = (ES6 feature) provides a more structured and cleaner way to 
-//               work with objects compared to traditional constructor functions
-//               ex. static keyword, encapsulation, inheritance
-
-class Product{
-    constructor(name, price){
-        this.name = name;
-        this.price = price;
-    }
-
-    displayProduct(){
-        console.log(`Product: ${this.name}`);
-        console.log(`Price: $${this.price.toFixed(2)}`);
-    }
-
-    calculateTotal(salesTax = 0.05){
-        return this.price + (this.price * salesTax);
-    }
+function showAnswer(index) {
+  const answerDiv = document.getElementById(`answer${index}`);
+  if (answerDiv.style.display === "none") {
+    answerDiv.style.display = "block";
+  } else {
+    answerDiv.style.display = "none";
+  }
 }
 
+localhostData();
 
-const product1 = new Product("Shirt", 19.99);
-const product2 = new Product("Pants", 22.50);
-const product3 = new Product("Coat", 100.00);
-
-product2.displayProduct();
-
-const total = product2.calculateTotal();
-console.log(`Total price (with tax): $${total.toFixed(2)}`);
-
-//Setters: 
-class Employee{
-    set name(name){
-      this.empName = name
-    }
-     specialPrint(){
-       console.log(this.empName)
-     }
-   }
-   
-let employee = new Employee
-employee.name = 'Madhavan'
-employee.specialPrint()
-
-//getters
-class Employee{
-    name = 'madhavan'
-    get getName(){
-       return this.name
-    }
-     specialPrint(){
-       console.log(this.name)
-     }
-   }
-   
-let employee = new Employee
-console.log(employee.getName); 
-
-/*Static : If we use static keyword , we dont neeed to create instance for the class . 
-         static variable can accesed inside normal decalration but normal variable cannot access inside static.*/
-class Student{
-    static name = 'Madhavan'
-    static age = 20
-    static get details(){
-      return(Student.name) 
-    }
-}
-  
-console.log(Student.details)
